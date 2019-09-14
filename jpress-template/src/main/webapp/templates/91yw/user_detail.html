@@ -9,15 +9,16 @@
         <div class="userinfo">
             <!-- 用户头像 -->
             <div class="avatar-box">
-                <img src="" alt="">
+                <img src="#(USER.avatar ?? )" alt="">
+
             </div>
             <!-- 用户昵称 -->
             <div class="username">
-                <p class="name">红鲤鱼与绿鲤鱼与驴</p>
+                <p class="name">#(USER.nickname ?? )</p>
                 <p class="join-in">
-                    已加入原味大家庭
-                    <span>23</span>
-                    天
+<!--                    已加入原味大家庭-->
+<!--                    <span>23</span>-->
+<!--                    天-->
                 </p>
             </div>
             <!-- 跳转按钮 -->
@@ -72,13 +73,14 @@
                 </a>
             </li>
             <li>
+                <a href="#(CPATH)/user/logout?csrf_token=#(CSRF_TOKEN)">
                 <img src="img/h5/u288.png" alt="">
                 <p>退出登录</p>
                 <!-- 跳转按钮 -->
-                <a class="go-to" href="#">
-                    <img src="img/h5/arrow.png" alt="">
+                <img src="img/h5/arrow.png" alt="">
                 </a>
             </li>
+
         </ul>
     </div>
 
