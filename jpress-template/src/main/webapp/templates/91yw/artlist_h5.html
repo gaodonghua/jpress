@@ -1,0 +1,82 @@
+#include("./_layout_h5.html")
+#@layout_h5()
+
+
+#define content()
+
+<div class="news-list-warp">
+    #articlePage()
+    #for(article : articlePage.list)
+    <div class="news-item">
+        <div class="new-title">
+            <a href="#(article.url ??)"> #(article.title)</a>
+        </div>
+        <div class="new-img-list">
+            <div class="new-img-item"><img src="#(article.showImage ?? 'img/default-img.jpg')" class="img-fluid" alt=""></div>
+            <div class="new-img-item"></div>
+            <div class="new-img-item"></div>
+        </div>
+        <div class="new-read">
+            <div class="new-share">
+                <div class="avatar-box">
+                    <img src="" alt="">
+                </div>
+                <p class="sharer-name">爱分享的某某某</p>
+            </div>
+
+            <div class="new-like-num">
+                <p>200点赞</p>
+                <p>1223阅读</p>
+            </div>
+        </div>
+    </div>
+    #end
+</div>
+#end
+
+<!--<div class="col-md-9 cl-left">-->
+
+<!--    #articlePage()-->
+<!--    #for(article : articlePage.list)-->
+<!--    <div class="cl-card">-->
+<!--        <a class="card-link" href="#(article.url)">-->
+<!--            <div class="row">-->
+<!--                <div class="col-lg-3 col-md-4 col-sm-12 cl-card-image">-->
+<!--                    <img src="#(article.showImage ? article.showImage  : 'img/default-img.jpg')" class="img-fluid" alt="">-->
+<!--                </div>-->
+
+<!--                <div class="col-lg-9 col-md-8 col-sm-12 cl-card-main">-->
+<!--                    <h3 class="cl-card-main-title">-->
+<!--                       #(article.title)-->
+<!--                    </h3>-->
+<!--                    <p class="cl-card-main-info">#maxLength(article.text,100)</p>-->
+<!--                    <p class="cl-card-more">阅读更多...</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--    #end-->
+
+
+
+
+
+<!--    #articlePaginate(firstGotoIndex=true)-->
+<!--    <nav aria-label="Page navigation example">-->
+<!--        <ul class="pagination justify-content-center">-->
+<!--            #for(page : pages)-->
+<!--            <li class="page-item #(page.style)"><a class="page-link" href="#(page.url ??)">#(page.text)</a></li>-->
+<!--            #end-->
+<!--        </ul>-->
+<!--    </nav>-->
+<!--    #end-->
+
+<!--    #end-->
+
+<!--</div>-->
+<!--<div class="col-md-3 cl-right">-->
+
+<!--    #include("./_rightbar.html")-->
+
+<!--</div>-->
+<!--#end-->
