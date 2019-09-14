@@ -27,12 +27,12 @@ import io.jboot.web.validate.EmptyValidate;
 import io.jboot.web.validate.Form;
 import io.jpress.JPressConsts;
 import io.jpress.JPressOptions;
+import io.jpress.commons.authcode.AuthCode;
+import io.jpress.commons.authcode.AuthCodeKit;
 import io.jpress.commons.sms.SmsKit;
 import io.jpress.model.User;
 import io.jpress.service.UserService;
 import io.jpress.web.base.TemplateControllerBase;
-import io.jpress.commons.authcode.AuthCode;
-import io.jpress.commons.authcode.AuthCodeKit;
 import io.jpress.web.commons.UserEmailSender;
 
 import java.util.Date;
@@ -101,6 +101,9 @@ public class UserController extends TemplateControllerBase {
         }
 
         User loginUser = userService.findByUsernameOrEmail(user);
+        if (null == loginUser) {
+            loginUser = userService.findByMobile(user);
+        }
         if (loginUser == null) {
             renderJson(Ret.fail("message", "用户名不正确。"));
             return;

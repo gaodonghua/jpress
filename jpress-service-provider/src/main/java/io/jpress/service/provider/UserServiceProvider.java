@@ -55,8 +55,15 @@ public class UserServiceProvider extends JbootServiceBase<User> implements UserS
                 ? DAO.findFirstByColumn("email", usernameOrEmail.trim().toLowerCase())
                 : DAO.findFirstByColumn("username", usernameOrEmail.trim().toLowerCase());
     }
-
-
+    
+    @Override
+    public User findByMobile(String mobile) {
+        
+        return DAO.findFirstByColumn("mobile",mobile.trim().toLowerCase());
+    }
+    
+    
+    @Override
     public Ret doValidateUserPwd(User user, String pwd) {
 
         if (user == null) {
@@ -71,7 +78,7 @@ public class UserServiceProvider extends JbootServiceBase<User> implements UserS
         String hashedPass = HashKit.sha256(salt + pwd);
 
         // 未通过密码验证
-        if (user.getPassword().equals(hashedPass) == false) {
+        if (!hashedPass.equals(user.getPassword())) {
             return Ret.fail("message", "用户名或密码不正确");
         }
 
