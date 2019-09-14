@@ -21,8 +21,9 @@
    */
   
   body {
-    margin: 0;
-    font-size: .24rem;
+      margin: 0;
+      font-size: .24rem;
+      background-color: #1b1b1b;
   }
   
   /**
