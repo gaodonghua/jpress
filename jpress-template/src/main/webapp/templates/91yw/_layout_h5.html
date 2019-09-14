@@ -20,7 +20,11 @@
     <div class="bottom-nav">
         <div><a href="/">首页</a></div>
         <div>敬请期待</div>
-        <div><a href="/ucenter">我的</a></div>
+        #if(USER)
+            <div><a href="/user/#(USER.id ??)">我的</a></div>
+        #else
+            <div><a href="/user/login">我的</a></div>
+        #end
     </div>
 </div>
 <script src="js/jquery.min.js"></script>
