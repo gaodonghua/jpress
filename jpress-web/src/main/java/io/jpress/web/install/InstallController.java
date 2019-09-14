@@ -24,11 +24,11 @@ import com.jfinal.plugin.activerecord.DbKit;
 import io.jboot.db.JbootDbManager;
 import io.jboot.db.datasource.DataSourceConfig;
 import io.jboot.db.datasource.DataSourceConfigManager;
-import io.jboot.utils.ArrayUtil;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jpress.JPressOptions;
-import io.jpress.core.install.InstallUtils;
+import io.jpress.core.install.DbUtil;
+import io.jpress.core.install.InstallUtil;
 import io.jpress.core.install.Installer;
 import io.jpress.model.User;
 import io.jpress.service.OptionService;
@@ -60,6 +60,9 @@ public class InstallController extends ControllerBase {
     @Inject
     private OptionService optionService;
 
+    @Inject
+    private InstallUtil installUtil;
+
     public void index() {
         render("/WEB-INF/install/views/step1.html");
     }
@@ -82,7 +85,7 @@ public class InstallController extends ControllerBase {
     public void step3() {
 
         //已经安装过了
-        if (InstallUtils.isInitBefore()) {
+        if (installUtil.isInitBefore()) {
             render("/WEB-INF/install/views/step3_notinit.html");
         } else {
             render("/WEB-INF/install/views/step3.html");
@@ -122,26 +125,25 @@ public class InstallController extends ControllerBase {
             return;
         }
 
+        boolean dbAutoCreate = getParaToBoolean("dbAutoCreate", false);
+        if (dbAutoCreate) {
+            if (!createDatabaseIfNeecessary(dbName, dbUser, dbPwd, dbHost, dbPort)) {
+                renderJson(Ret.fail().set("message", "无法自动创建数据库，可能是用户名密码错误，或没有权限").set("errorCode", 5));
+                return;
+            }
+        }
+
+
         try {
-            InstallUtils.init(dbName, dbUser, dbPwd, dbHost, dbPort);
 
-            List<String> tables = InstallUtils.getTableList();
+            installUtil.init(dbName, dbUser, dbPwd, dbHost, dbPort);
 
-            if (ArrayUtil.isNotEmpty(tables)
-                    && tables.contains("attachment")
-                    && tables.contains("option")
-                    && tables.contains("menu")
-                    && tables.contains("permission")
-                    && tables.contains("role")
-                    && tables.contains("user")
-                    && tables.contains("utm")) {
-
-                InstallUtils.setInitBefore(true);
+            if (installUtil.isInitBefore()) {
                 renderOkJson();
                 return;
             }
 
-            if (ArrayUtil.isNotEmpty(tables)) {
+            if (!installUtil.isJpressDb()) {
                 renderJson(Ret.fail("message", "无法安装，该数据库已有表信息了，为了安全起见，请选择全新的数据库进行安装。")
                         .set("errorCode", 5));
                 return;
@@ -156,10 +158,45 @@ public class InstallController extends ControllerBase {
         renderOkJson();
     }
 
+    private boolean createDatabaseIfNeecessary(String dbName, String dbUser, String dbPwd, String dbHost, String dbPort) {
+
+        DbUtil dbUtil = null;
+        try {
+            dbUtil = new DbUtil("information_schema", dbUser, dbPwd, dbHost, dbPort);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //可能是该用户没有 information_schema 的权限
+        if (dbUtil == null) {
+            return false;
+        }
+
+
+        try {
+            List<String> dbs = dbUtil.query("select SCHEMA_NAME from `SCHEMATA`");
+            if (dbs != null && dbs.contains(dbName)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            dbUtil.executeSql("CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
 
     public void install() {
 
-        if (InstallUtils.isInitBefore()) {
+        if (installUtil.isInitBefore()) {
             doProcessInOldDb();
         } else {
             doProcessNormal();
@@ -275,7 +312,7 @@ public class InstallController extends ControllerBase {
         }
 
         try {
-            InstallUtils.tryInitJPressTables();
+            installUtil.initJPressTables();
         } catch (SQLException e) {
             e.printStackTrace();
             renderFailJson();
@@ -330,14 +367,14 @@ public class InstallController extends ControllerBase {
     private void initActiveRecordPlugin() {
 
 
-        DataSourceConfig config = InstallUtils.getDataSourceConfig();
+        DataSourceConfig config = installUtil.getDataSourceConfig();
 
         // 在只有 jboot.properties 但是没有 install.lock 的情况下
         // jboot启动的时候会出初始化 jboot.properties 里配置的插件
         // 此时，会出现 Config already exist 的异常
-        if (DbKit.getConfig(DataSourceConfig.NAME_DEFAULT) == null){
+        if (DbKit.getConfig(DataSourceConfig.NAME_DEFAULT) == null) {
             config.setName(DataSourceConfig.NAME_DEFAULT);
-        }else {
+        } else {
             config.setName(StrUtil.uuid());
         }
 
@@ -350,10 +387,10 @@ public class InstallController extends ControllerBase {
 
     private boolean doCreatedInstallLockFiles() {
         try {
-            File lockFile = InstallUtils.lockFile();
+            File lockFile = installUtil.getLockFile();
             lockFile.createNewFile();
 
-            InstallUtils.initJpressProperties();
+            installUtil.initJpressProperties();
 
         } catch (IOException e) {
             e.printStackTrace();
