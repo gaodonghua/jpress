@@ -187,6 +187,15 @@
     line-height: 0.5rem;
     text-align: right;
 }
+.news-list-warp > a{
+    color: #ffffff;
+}
+.news-list-warp > a:active{
+    color: #ffffff;
+}
+.news-list-warp > a:visited{
+    color: #ffffff;
+}
 
 .bottom-nav {
     position: fixed;
