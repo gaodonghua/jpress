@@ -1,0 +1,43 @@
+#include("./_layout_h5.html")
+#@layout_h5()
+
+
+#define content()
+
+<div class="top-menu-bar">
+    <div class="top-menu-list">
+        #for(menu : MENUS)
+        <a href="#(menu.url ??)" target="#(menu.target ??)"
+           class="top-menu-item #(menu.isActive ? 'top-menu-item-active' : '')">#(menu.text ??)</a>
+        #end
+    </div>
+</div>
+<div class="menu-placeholder-box"></div>
+<div class="news-list-warp">
+    #for(article : articles)
+    <div class="news-item">
+        <div class="new-title">
+            <a href="#(article.url)"> #(article.title)</a>
+        </div>
+        <div class="new-img-list">
+            <div class="new-img-item"><img src="#(article.showImage ?? 'img/default-img.jpg')" class="img-fluid" alt=""></div>
+            <div class="new-img-item"></div>
+            <div class="new-img-item"></div>
+        </div>
+        <div class="new-read">
+            <div class="new-share">
+                <div class="avatar-box">
+                    <img src="" alt="">
+                </div>
+                <p class="sharer-name">爱分享的某某某</p>
+            </div>
+
+            <div class="new-like-num">
+                <p>200点赞</p>
+                <p>1223阅读</p>
+            </div>
+        </div>
+    </div>
+    #end
+</div>
+#end

@@ -1,0 +1,61 @@
+#include("./_layout_h5.html")
+#@layout_h5()
+
+#define content()
+	<div class="detail-box">
+		<div class="main-article">
+			<a href="#" class="back-to">
+				<img src="img/h5/arrow.png" alt="">
+			</a>
+
+			<!-- 文章内容开始 -->
+			<div class="new-title">
+				#(article.title)
+			</div>
+			<div class="author-box">
+				<div class="avatar-box">
+					<img src="" alt="">
+				</div>
+				<p class="author-name">动物管理局</p>
+				<p class="like-num">#(article.view_count ?? 0)点赞</p>
+			</div>
+
+			<!-- 内容 -->
+			<div class="content">
+				#(article.content)
+			</div>
+
+			<!-- 推荐文章 -->
+
+			#relevantArticles(article)
+			<div class="recommended">
+				<div class="recom-item">
+					#for(article :relevantArticles )
+					<a class="recommend-panel-link" href="#(article.url ??)">
+						<p class="article-title">#(article.title ??)</p>
+						<ul class="article-img-list">
+							<li>
+								<img src="" alt="">
+							</li>
+							<li>
+								<img src="" alt="">
+							</li>
+							<li>
+								<img src="" alt="">
+							</li>
+						</ul>
+					</a>
+					#end
+				</div>
+			</div>
+			#end
+			<!-- 文章内容结束 -->
+		</div>
+
+		<!-- 点赞,收藏 -->
+		<div class="like-box">
+			<img src="img/h5/u30.png" alt="">
+			<img src="img/h5/u31.png" alt="">
+		</div>
+	</div>
+#end

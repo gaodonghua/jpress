@@ -1,0 +1,30 @@
+#define layout_h5()
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>#(SEO_TITLE ?? (WEB_TITLE + '-' + WEB_SUBTITLE))</title>
+    <meta name="keywords" content="#(SEO_KEYWORDS)">
+    <meta name="description" content="#(SEO_DESCRIPTION)">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/yw.css">
+    <script src="js/rem.js"></script>
+</head>
+<body>
+<div class="main">
+    #content
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div><a href="index_h5.html">首页</a></div>
+        <div>敬请期待</div>
+        <div><a href="my_h5.html">我的</a></div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+#@script?()
+</body>
+</html>
+#end
