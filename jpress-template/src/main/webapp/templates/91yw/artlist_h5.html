@@ -5,6 +5,9 @@
 #define content()
 
 <div class="news-list-warp">
+    <a href="#" class="back-to" onClick="javascript :history.go(-1);">
+        <img src="img/h5/arrow.png" alt="">
+    </a>
     #articlePage()
     #for(article : articlePage.list)
     <div class="news-item">
